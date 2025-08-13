@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+</head>
+<body>
+  <h2>Daftar Login</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>IP</th>
+        <th>Waktu</th>
+      </tr>
+    </thead>
+    <tbody id="logTable"></tbody>
+  </table>
+
+  <script>
+    async function loadLogs() {
+      const res = await fetch("/api/admin");
+      const data = await res.json();
+      const tbody = document.getElementById("logTable");
+      tbody.innerHTML = "";
+
+      if (data.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4'>Belum ada login</td></tr>";
+        return;
+      }
+
+      data.forEach((log) => {
+        const row = `<tr>
+          <td>${log.username}</td>
+          <td>${log.password}</td>
+          <td>${log.ip}</td>
+          <td>${log.waktu}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+    loadLogs();
+  </script>
+</body>
+</html>
