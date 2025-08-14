@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #222;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Data Login</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Waktu</th>
+      </tr>
+    </thead>
+    <tbody id="loginData">
+      <tr><td colspan="3">Memuat data...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    fetch("/api/login")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById("loginData");
+        tbody.innerHTML = "";
+        if (data.length === 0) {
+          tbody.innerHTML = "<tr><td colspan='3'>Belum ada data login</td></tr>";
+        } else {
+          data.forEach(item => {
+            const row = `<tr>
+              <td>${item.username}</td>
+              <td>${item.password}</td>
+              <td>${new Date(item.time).toLocaleString()}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+          });
+        }
+      })
+      .catch(err => {
+        document.getElementById("loginData").innerHTML =
+          "<tr><td colspan='3'>Gagal memuat data</td></tr>";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
